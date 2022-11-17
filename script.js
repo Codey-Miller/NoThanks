@@ -103,7 +103,15 @@ window.addEventListener("load",function(){
 			this.score_element.innerHTML = this.score;
 		}
 		go(){
-			if(this.type=="human"&&chosen_action=="")return;
+			if(this.type=="human"&&chosen_action==""){
+				document.querySelector(".btnTake").removeAttribute("disabled");
+				if(this.counter_amount>0){
+					document.querySelector(".btnPass").removeAttribute("disabled");
+				}
+				return;
+			}
+			document.querySelector(".btnTake").setAttribute("disabled","disabled");
+			document.querySelector(".btnPass").setAttribute("disabled","disabled");
 			if(this.type=="ai"){
 				if(new Date().getTime()<=last_turn_time+1000)return;
 				if(this.counter_amount == 0||rand(1,4)==1){
