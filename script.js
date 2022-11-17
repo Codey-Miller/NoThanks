@@ -6,7 +6,7 @@ window.addEventListener("load",function(){
 	}
 	let player_list;
 	let human_count = 1;
-	let ai_count = 3;
+	let ai_count = 6;
 	let player_count = ai_count+human_count;
 	let counter_amount = player_count <= 5 && player_count >= 3 ? 11 : player_count == 6 ? 7 : player_count == 7 ? 7 : 0;
 	let names = ["Alex", "Ben", "Charlie", "Darren", "Eli", "Freya", "Greg"];
@@ -75,8 +75,14 @@ window.addEventListener("load",function(){
 			this.name_element = document.createElement("td");
 			this.element.appendChild(this.name_element);
 			
+			this.score = -counter_amount;
+			this.score_element = document.createElement("td");
+			this.score_element.style.color = "HSL(0,75%,50%)";
+			this.element.appendChild(this.score_element);
+			
 			this.counter_amount = counter_amount;
 			this.counter_amount_element = document.createElement("td");
+			this.counter_amount_element.style.color = "HSL(120,75%,50%)";
 			this.element.appendChild(this.counter_amount_element);
 			
 			this.card_list = [];
@@ -90,7 +96,7 @@ window.addEventListener("load",function(){
 		draw(){
 			this.name_element.innerHTML = this.name+(this.turn?"*":"");
 			this.counter_amount_element.innerHTML = this.counter_amount;
-			this.card_list_element.innerHTML = this.card_list.toString();
+			this.score_element.innerHTML = this.score;
 		}
 		go(){
 			if(this.type=="human"&&chosen_action=="")return;
@@ -112,13 +118,35 @@ window.addEventListener("load",function(){
 			last_turn_time = new Date().getTime();
 		}
 		take(){
-			this.card_list.push(deck.take());
-			this.counter_amount += counters.take();
+			let counter_value = counters.take();
+			this.counter_amount += counter_value;
+			
+			let card_value = deck.take();
+			this.card_list.push(card_value);
+			this.card_list.sort(function(a,b){return a-b;});
+			this.card_list_element.innerHTML="";
+			let new_score = -this.counter_amount;
+			for(let card_value of this.card_list){
+				let card_element = document.createElement("span");
+				if(this.card_list.indexOf(card_value-1)>=0){
+					card_element.style.color = "HSL(240,25%,75%)";
+				} else {
+					card_element.style.color = "HSL(240,75%,50%)";
+					new_score+=card_value;
+				}
+				if(this.card_list_element.innerHTML!=""){
+					card_element.innerHTML = ",";
+				}
+				card_element.innerHTML += card_value;
+				this.card_list_element.appendChild(card_element);
+			}
+			this.score = new_score;
 		}
 		pass(){
 			this.counter_amount--;
 			counters.pass();
 			turn_count=(++turn_count)%player_count;
+			this.score += 1;
 		}
 	}
 	class PlayerList{
@@ -140,7 +168,6 @@ window.addEventListener("load",function(){
 		}
 		draw(){
 			let count = 0;
-			console.log(turn_count);
 			for(let player of this.player_list){
 				player.turn = count==turn_count;
 				player.draw();
