@@ -51,6 +51,10 @@ window.addEventListener("load",function(){
 			for(let value=3;value<=35;value++){
 				this.card_list.push(new Card(value));
 			}
+			console.log(this.card_list);
+			for(let i=0;i<9;i++){
+				this.card_list.splice(rand(0,this.card_list.length),1);
+			}
 			this.card_list = shuffle(this.card_list);
 			for(let card of this.card_list){
 				this.element.appendChild(card.element);
