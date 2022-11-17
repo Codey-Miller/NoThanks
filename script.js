@@ -6,7 +6,7 @@ window.addEventListener("load",function(){
 	}
 	let player_list;
 	let human_count = 1;
-	let ai_count = 6;
+	let ai_count = 4;
 	let player_count = ai_count+human_count;
 	let counter_amount = player_count <= 5 && player_count >= 3 ? 11 : player_count == 6 ? 7 : player_count == 7 ? 7 : 0;
 	let names = ["Alex", "Ben", "Charlie", "Darren", "Eli", "Freya", "Greg"];
@@ -51,7 +51,6 @@ window.addEventListener("load",function(){
 			for(let value=3;value<=35;value++){
 				this.card_list.push(new Card(value));
 			}
-			console.log(this.card_list);
 			for(let i=0;i<9;i++){
 				this.card_list.splice(rand(0,this.card_list.length),1);
 			}
